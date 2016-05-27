@@ -34,3 +34,4 @@ node_modules
 
 # Mac junk
 .DS_Store
+src/d3by5-base-chart
