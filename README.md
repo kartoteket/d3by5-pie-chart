@@ -1,5 +1,5 @@
 # d3by5-pie-chart
-The d3by5 is part of the d3by5 graph tools, this specific package will draw a pie chart based on Mike Bostocs [Towards Reusable Charts](https://bost.ocks.org/mike/chart/) using d3 v4.0
+The d3by5 is part of the d3by5 graph tools, this specific package will draw a pie chart based on Mike Bostocks [Towards Reusable Charts](https://bost.ocks.org/mike/chart/) using d3 v4.0
 
 ## API
 ### Pie chart specific
