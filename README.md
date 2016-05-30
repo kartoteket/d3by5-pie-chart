@@ -2,8 +2,8 @@
 The d3by5 is part of the d3by5 graph tools, this specific package will draw a pie chart based on Mike Bostocks [Towards Reusable Charts](https://bost.ocks.org/mike/chart/) using d3 v4.0
 
 ## USAGE
-two versions are built in the dist folder.
-use the [version] version if you want to keep a specific version, use submodules or symlinks (or download) of ther one without version if you want to update the lib without updating your code
+When building two versions are built in the dist folder.
+use the [version] version if you want to keep a specific version, use submodules or symlinks (or download) of the one without version if you want to update the lib without updating your code
 
 withdeps has no source maps yet
 
