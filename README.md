@@ -27,6 +27,15 @@ A browserified and uglified version with all dependencies included. Use this if 
 * pie-chart.min.js              // uglified and minified without version
 * pie-chart.js                  // non minified without version
 
+## DEPENDENCIES
+two dependencies
+* Underscore
+```
+npm install underscore
+```
+* Base Graph. This in not yet a npm module but can be found [here](https://github.com/kartoteket/d3by5-base-chart) The graph looks for it in 'lib/d3by5-base-graph'
+
+
 ## API
 ### Pie chart specific
 
