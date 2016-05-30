@@ -29,12 +29,12 @@ buildall()
   # create the directories
   mkdir -p dist/withdeps & mkdir -p dist/nodeps
   # browserify the full dev version without any uglifying
-  browserify src/pie-chart.js -o dist/withdeps/pie-chart.js
+  browserify -t aliasify src/pie-chart.js -o dist/withdeps/pie-chart.js
   # browserify and uglify full dev version, no version nomber included
-  browserify src/pie-chart.js | uglifyjs -m -o dist/withdeps/pie-chart-min.js
+  browserify -t aliasify src/pie-chart.js | uglifyjs -m -o dist/withdeps/pie-chart-min.js
   #browserify and uglify with dependencies and source maps
-  browserify src/pie-chart.js | uglifyjs -m -o "dist/withdeps/pie-chart-${PACKAGE_VERSION}.min.js"
-  browserify src/pie-chart.js -o "dist/withdeps/pie-chart-${PACKAGE_VERSION}.js"
+  browserify -t aliasify src/pie-chart.js | uglifyjs -m -o "dist/withdeps/pie-chart-${PACKAGE_VERSION}.min.js"
+  browserify -t aliasify src/pie-chart.js -o "dist/withdeps/pie-chart-${PACKAGE_VERSION}.js"
  #--source-map "dist/withdeps/pie-chart-${PACKAGE_VERSION}.min.js.map" &
   #
   # uglify without dependencies, but with source map

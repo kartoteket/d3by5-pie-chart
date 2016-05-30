@@ -11,6 +11,7 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 - Added submodule 'base' with base graph
 - Added initial 'pie-chart' code for testing
 - Added build script
+- Added aliasify and shimming of base-chart
 
 ### Changed
 - Updated README
