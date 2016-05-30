@@ -33,7 +33,7 @@ two dependencies
 ```
 npm install underscore
 ```
-* Base Graph. This in not yet a npm module but can be found [here](https://github.com/kartoteket/d3by5-base-chart) The graph looks for it in 'lib/d3by5-base-graph'
+* Base Graph. This in not yet a npm module but can be found [here](https://github.com/kartoteket/d3by5-base-chart) The graph looks for 'd3by5-base-graph' use [aliasify](https://www.npmjs.com/package/aliasify) or similar to shim the file or just domnload or link to top level
 
 
 ## API
