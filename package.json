@@ -1,0 +1,38 @@
+{
+  "name": "d3by5-pie-chart",
+  "version": "0.0.1",
+  "description": "A d3 implementation of pie charts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kartoteket/d3by5-pie-chart.git"
+  },
+  "keywords": [
+    "d3",
+    "kartoteket",
+    "visualization",
+    "visualisation",
+    "pie",
+    "chart",
+    "graph"
+  ],
+  "author": "Bård Ingebricson Røtzer, Svale Andreas Fossåskaret",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kartoteket/d3by5-pie-chart/issues"
+  },
+  "homepage": "https://github.com/kartoteket/d3by5-pie-chart#readme",
+  "scripts": {
+    "build": "bin/build.sh"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "uglify-js": "^2.6.2"
+  }
+}
