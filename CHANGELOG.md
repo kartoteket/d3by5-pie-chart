@@ -10,6 +10,7 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 - Added README with initial API definition
 - Added submodule 'base' with base graph
 - Added initial 'pie-chart' code for testing
+- Added build script
 
 ### Changed
 - Updated README
