@@ -19,19 +19,26 @@ A browserified and uglified version with all dependencies included. Use this if 
 * pie-chart.min.js              // uglified and minified without version
 
 ## DEPENDENCIES
-The only dependency is
+Two dependencies in package.json
 * Underscore
-```
-npm install underscore
-```
+* d3
 
+```
+npm install
+```
+will get you all you need
 
 ## API
-* fillColor - String/hex: the fillcolor (optional, defaults to 'coral')
-* padding - Number: the padding to use (optional, detaults to 2)
-* width  - Number: the height of the chart (mandatory)
-* height - Number: the width of the chart (mandatory)
-* data   - Array: the data that produces the chart (optional, but no chart without it) [{label: String, value: Number}, {xx}]
+### Required
+* width  - Number: the height of the chart
+* height - Number: the width of the chart
+* data   - Array: the data that produces the chart
+* *[{label: String, value: Number}, {xx}]
+
+### Optional
+* fillColor - String/hex: the fillcolor (defaults to 'coral')
+* padding - Number: the padding to use (detaults to 2)
+
 
 ## EXAMPLE
 All methods are chained, you can simply instanciate a new pie chart like this
