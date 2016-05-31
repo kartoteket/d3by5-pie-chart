@@ -7,39 +7,29 @@ Build the project by running
 npm run build
 ```
 
-
 When building two versions are built in the dist folder.
 use the [version] version if you want to keep a specific version, use submodules or symlinks (or download) of the one without version if you want to update the lib without updating your code
 
 withdeps has no source maps yet
 
-#### dist/nodeps
-a minified and uglified version, just the file, no dependencies bundled, it comes with a source map. Use this version if you load the dependencies elsewhere and want to use multiple graphs.
-* pie-chart-[version].min.js     // uglified with version
-* pie-chart-[version].min.js.map // source map
-* pie-chart.min.js               // uglified without version
-* pie-chart.min.js.map           // source map
-
-#### dist/withdeps
+#### dist/
 A browserified and uglified version with all dependencies included. Use this if you only want a simple graph to test.
 * pie-chart-[version].min.js    // uglified and minified with version
-* pie-chart-[version].js        // non minified with version
 * pie-chart.min.js              // uglified and minified without version
-* pie-chart.js                  // non minified without version
 
 ## DEPENDENCIES
-two dependencies
+The only dependency is
 * Underscore
 ```
 npm install underscore
 ```
-* Base Graph. This in not yet a npm module but can be found [here](https://github.com/kartoteket/d3by5-base-chart) The graph looks for it in '3by5-base-graph' use [aliasify](https://www.npmjs.com/package/aliasify) or similar to shim the file or just download or link to this folder within your project (see the aliasify part of package.json for example)
 
 
 ## API
-### Pie chart specific
+* fillColor - String/hex: the fillcolor (optional, defaults to 'coral')
+* padding - Number: the padding to use (optional, detaults to 2)
+* width  - Number: the height of the chart (mandatory)
+* height - Number: the width of the chart (mandatory)
+* data   - Array: the data that produces the chart (optional, but no chart without it) [{label: String, value: Number}, {xx}]
 
-### Common API from the [d3by5-base-chart](https://github.com/kartoteket/d3by5-base-chart)
-* width  - the height of the chart (mandatory)
-* height - the width of the chart (mandatory)
-* data   - the data that produces the chart (optional, but no chart without it)
+
