@@ -1,6 +1,6 @@
 {
   "name": "d3by5-pie-chart",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A d3 implementation of pie charts",
   "main": "index.js",
   "scripts": {

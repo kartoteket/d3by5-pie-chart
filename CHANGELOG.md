@@ -5,7 +5,7 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 
 
 
-## [0.0.2] - 2016-05-30
+## [0.1.0] - 2016-05-30
 ### Added
 - Added README with initial API definition
 - Added submodule 'base' with base graph
