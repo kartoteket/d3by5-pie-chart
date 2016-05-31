@@ -1,6 +1,5 @@
 'use:strict';
-var base = require('d3by5-base-chart')
- , _ = require('underscore')
+var _ = require('underscore')
 ;
 
 module.exports = pieChart;
@@ -9,29 +8,27 @@ module.exports = pieChart;
  * The entrypoint
  * @return {[type]} [description]
  */
-function pieChart (_selection) {
+function pieChart () {
 
-
-  var chart = {
-    init: function (selection) {
-      var that = this;
+  var chart = function (selection) {
+      var options = {};
 
       selection.each(function () {
 
-        var barSpacing  = that.height / that.data.length;
-        var barHeight   = barSpacing - that.padding;
-        var maxValue    = d3.max(that.data);
-        var widthScale  = that.width / maxValue;
+        var barSpacing  = options.height / options.data.length;
+        var barHeight   = barSpacing - options.padding;
+        var maxValue    = d3.max(options.data);
+        var widthScale  = options.width / maxValue;
 
-        var dom = d3.select(that);
+        var dom = d3.select(this);
         var svg = dom.append('svg')
             .attr('class', 'chart barchart')
-            .attr('height', that.height)
-            .attr('width', that.width)
-            .style('fill', that.fillColor);
+            .attr('height', options.height)
+            .attr('width', options.width)
+            .style('fill', options.fillColor);
 
         var bars = svg.selectAll('rect.chart__bar')
-            .data(that.data)
+            .data(options.data)
             .enter()
             .append('rect')
             .attr('class', 'chart__bar')
@@ -41,31 +38,60 @@ function pieChart (_selection) {
             .attr('width', function (d) { return d * widthScale; });
 
       });
-      return this;
-    },
 
-    fillColor: function(value) {
-      if (!arguments.length) return this.fillColor;
-      this.fillColor = value;
-      return this;
-    },
+
+    chart.fillColor = function (value) {
+      if (!arguments.length) return options.fillColor;
+      options.fillColor = value;
+      return chart;
+    };
 
     /**
      * Sets the chart-padding
      * @param  {Number} value - the padding of the chart
+     * @return {Mixed}        - the value or chart
+     */
+    chart.padding = function (value) {
+      if (!arguments.length) return options.padding;
+      options.padding = value;
+      return chart;
+    };
+
+    /**
+     * Sets the width of a chart
+     * @param  {Number} value - the width of the chart
      * @return {Mixed}        - the value or this
      */
-    padding: function(value) {
-      if (!arguments.length) return this.padding;
-      this.padding = value;
-      return this;
-    },
+    chart.width = function (value) {
+      if (!arguments.length) return options.width;
+      options.width = value;
+      return chart;
+    };
+    /**
+     * Sets the height of a chart
+     * @param  {Number} value - the height of the chart
+     * @return {Mixed}        - the value or chart
+     */
+    chart.height = function (value) {
+      if (!arguments.length) return options.height;
+      options.height = value;
+      return chart;
+    };
+    /**
+     * Sets the data on a chart
+     * @param  {Number} value - the data used to draw the chart
+     * @return {Mixed}        - the value or chart
+     */
+    chart.data = function  (value) {
+      if (!arguments.length) return options.height;
+      options.height = value;
+      return chart;
+    };
+
 
   };
 
-  // merge the base class in here
-  chart = _.extend(chart, base);
+  return chart;
 
-  return chart.init(_selection);
 
 }
