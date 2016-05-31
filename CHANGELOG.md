@@ -10,6 +10,13 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 - Added README with initial API definition
 - Added submodule 'base' with base graph
 - Added initial 'pie-chart' code for testing
+- Added build script
+- Added aliasify and shimming of base-chart
+
+### Changed
+- Updated README
+- Simplify building by removing dependencies in build.sh
+- Remove dependencies and inline all graph menthods
 
 ### Removed
 - Removed submodule 'base' with base graph
