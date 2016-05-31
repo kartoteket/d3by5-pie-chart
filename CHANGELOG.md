@@ -5,13 +5,14 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 
 
 
-## [UNRELEASED]
+## [0.0.2] - 2016-05-30
 ### Added
 - Added README with initial API definition
 - Added submodule 'base' with base graph
 - Added initial 'pie-chart' code for testing
 - Added build script
 - Added aliasify and shimming of base-chart
+- Added proper creation of a pie chart from data
 
 ### Changed
 - Updated README

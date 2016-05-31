@@ -9,50 +9,66 @@ module.exports = pieChart;
  * The entrypoint
  * @return {[type]} [description]
  */
-function pieChart () {
+function pieChart (opt) {
 
-  var options = {};
+  var options = opt ? _.clone(opt) : {};
+
   function chart (selection) {
-    // set the dafaults
-    options.padding = 2;
+    // set the defaults
+    options.padding = options.padding || 0;
+    options.innerRadius = options.innerRadius || 0;
 
 
-      selection.each(function () {
 
-        var barSpacing  = options.height / options.data.length;
-        var barHeight   = barSpacing - options.padding;
-        var maxValue    = d3.max(options.data);
-        var widthScale  = options.width / maxValue;
+      var width = options.width
+        , height = options.height
+        , radius = (Math.min(options.width, options.height) / 2) - (2 * options.padding)
+        , arc
+        , pie
+        , svg
+        , g
+      ;
 
-        var dom = d3.select(this);
-        var svg = dom.append('svg')
-            .attr('class', 'chart barchart')
-            .attr('height', options.height)
-            .attr('width', options.width)
-            .style('fill', options.fillColor);
+      arc = d3.svg.arc()
+              .outerRadius(radius)
+              .innerRadius(options.innerRadius);
 
-        var bars = svg.selectAll('rect.chart__bar')
-            .data(options.data)
-            .enter()
-            .append('rect')
-            .attr('class', 'chart__bar')
-            .attr('y', function (d, i) { return i * barSpacing;  })
-            .attr('height', barHeight)
-            .attr('x', 0)
-            .attr('width', function (d) { return d * widthScale; });
+      pie = d3.layout.pie()
+              .sort(null)
+              .value(function(d) { return d.values; });
 
-      });
+      svg = selection.append("svg")
+                      .attr("width", width)
+                      .attr("height", height)
+                      .append("g")
+                        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+      g = svg.selectAll(".arc")
+              .data(pie(options.data))
+              .enter().append("g")
+                .attr("class", "arc");
+
+       g.append("path")
+        .attr("d", arc)
+        .style("fill", function (d) {
+          return d.data.color;
+        });
+
+        // multiple options must be added
+        if (options.on) {
+          g.on(options.on.action, options.on.method);
+        }
     }
 
 
-    chart.fillColor = function (value) {
-      if (!arguments.length) return options.fillColor;
-      options.fillColor = value;
+    chart.innerRadius = function (value) {
+      if (!arguments.length) return options.innerRadius;
+      options.innerRadius = value;
       return chart;
     };
 
     /**
-     * Sets the chart-padding
+     * Sets the padding of all sides in the chart
      * @param  {Number} value - the padding of the chart
      * @return {Mixed}        - the value or chart
      */
@@ -90,6 +106,17 @@ function pieChart () {
     chart.data = function  (value) {
       if (!arguments.length) return options.data;
       options.data = value;
+      return chart;
+    };
+    /**
+     * Sets a listener on the clices of the chart
+     * @param  {String} action    - the type of action to listen to ( ie. 'click', 'mouseover')
+     * @param  {Function} method  -  A bound method to be called when the action is invoked, passes the datum for this specific slice
+     * @return {Mixed}            - the value or chart
+     */
+    chart.on = function (action, method) {
+      if (!arguments.length) return options.on;
+      options.on = {action: action, method: method};
       return chart;
     };
 
