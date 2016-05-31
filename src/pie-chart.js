@@ -1,5 +1,6 @@
 'use:strict';
 var _ = require('underscore')
+  , d3 = require('d3')
 ;
 
 module.exports = pieChart;
@@ -10,8 +11,11 @@ module.exports = pieChart;
  */
 function pieChart () {
 
-  var chart = function (selection) {
-      var options = {};
+  var options = {};
+  function chart (selection) {
+    // set the dafaults
+    options.padding = 2;
+
 
       selection.each(function () {
 
@@ -38,6 +42,7 @@ function pieChart () {
             .attr('width', function (d) { return d * widthScale; });
 
       });
+    }
 
 
     chart.fillColor = function (value) {
@@ -83,15 +88,10 @@ function pieChart () {
      * @return {Mixed}        - the value or chart
      */
     chart.data = function  (value) {
-      if (!arguments.length) return options.height;
-      options.height = value;
+      if (!arguments.length) return options.data;
+      options.data = value;
       return chart;
     };
 
-
-  };
-
   return chart;
-
-
 }
