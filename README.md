@@ -33,7 +33,7 @@ will get you all you need
 * width  - Number: the height of the chart
 * height - Number: the width of the chart
 * data   - Array: the data that produces the chart
-* *[{label: String, value: Number}, {xx}]
+**[{label: String, value: Number}, {xx}]
 
 ### Optional
 * fillColor - String/hex: the fillcolor (defaults to 'coral')
