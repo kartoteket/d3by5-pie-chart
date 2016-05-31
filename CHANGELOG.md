@@ -15,6 +15,7 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 
 ### Changed
 - Updated README
+- Simplify building by removing dependencies in build.sh
 
 ### Removed
 - Removed submodule 'base' with base graph
