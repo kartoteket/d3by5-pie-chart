@@ -104,10 +104,16 @@ function pieChart (opt) {
      * @return {Mixed}        - the value or chart
      */
     chart.data = function  (value) {
-      if (!arguments.length) return options.data;
+      if (!arguments.length) {
+        return options.data;
+      }
       options.data = value;
+      if (typeof updateData === 'function') {
+        updateData();
+      }
       return chart;
     };
+
     /**
      * Sets a listener on the clices of the chart
      * @param  {String} action    - the type of action to listen to ( ie. 'click', 'mouseover')
