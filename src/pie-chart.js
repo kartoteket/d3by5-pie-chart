@@ -11,7 +11,9 @@ module.exports = pieChart;
  */
 function pieChart (opt) {
 
-  var options = opt ? _.clone(opt) : {};
+  var options = opt ? _.clone(opt) : {}
+    , updateData = null
+  ;
 
   function chart (selection) {
     // set the defaults
@@ -25,8 +27,11 @@ function pieChart (opt) {
         , radius = (Math.min(options.width, options.height) / 2) - (2 * options.padding)
         , arc
         , pie
+        , path
         , svg
         , g
+        , render
+        , arcTween
       ;
 
       arc = d3.svg.arc()
@@ -43,21 +48,80 @@ function pieChart (opt) {
                       .append("g")
                         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-      g = svg.selectAll(".arc")
-              .data(pie(options.data))
-              .enter().append("g")
-                .attr("class", "arc");
+      // g = svg.selectAll(".arc")
+      //         .data(pie(options.data))
+      //         .enter().append("g")
+      //           .attr("class", "arc");
 
-       g.append("path")
-        .attr("d", arc)
-        .style("fill", function (d) {
-          return d.data.color;
-        });
+      // g.append("path")
+      //   .attr("d", arc)
+      //   .style("fill", function (d) {
+      //     return d.data.color;
+      //   });
+      //   
+      //   
+      //   
+    arcTween = function (a) {
+              var i = d3.interpolate(this._current, a);
+              this._current = i(0);
+              return function(t) {
+                return arc(i(t));
+              };
+            }; // redraw the arcs
 
-        // multiple options must be added
-        if (options.on) {
-          g.on(options.on.action, options.on.method);
-        }
+
+    render = function () {
+      //data join
+      path = svg
+                .selectAll("path")
+                .data(pie(options.data), function (d) {
+                  return d.data.label;
+                });
+
+      // update, transition
+      path.transition()
+          .duration(1000)
+          .attrTween("d", arcTween);
+
+      // create new elements
+      path.enter().append("path")
+                .attr("fill", function(d) {
+                  return d.data.color;
+                })
+                .attr("d", arc)
+                .transition()
+                .duration(1000)
+                .attrTween("d", arcTween)
+                .each(function(d) {
+                  this._current = d;
+                }); // store the initial angles
+
+      // remove unused data
+      path.exit()
+          .transition()
+          .attrTween("d", arcTween)
+          .remove();
+
+      // multiple options must be added
+      if (options.on) {
+        path.on(options.on.action, options.on.method);
+      }
+    };
+
+    render();
+
+
+      // add the updatemethods
+      // ref: https://www.toptal.com/d3-js/towards-reusable-d3-js-charts
+      // ref: https://bl.ocks.org/mbostock/1346410
+      updateData = function () {
+        render();
+      //   path = path.data(pie(options.data)); // compute the new angles
+      //   path.transition()
+      //       .duration(750)
+      //       .attrTween("d", arcTween);
+      };
+
     }
 
 
