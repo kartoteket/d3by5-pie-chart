@@ -30,7 +30,10 @@
   },
   "homepage": "https://github.com/kartoteket/d3by5-pie-chart#readme",
   "dependencies": {
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+
+    "//": "LOCAL DEPENDENCIES",
+    "d3by5-base-chart": "file:./d3by5-base-chart"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
