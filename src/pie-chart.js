@@ -1,6 +1,7 @@
 'use:strict';
 var _ = require('underscore')
   , d3 = require('d3')
+  , base = require('./d3by5-base-chart')
 ;
 
 module.exports = pieChart;
@@ -11,70 +12,73 @@ module.exports = pieChart;
  */
 function pieChart (opt) {
 
-  var options = opt ? _.clone(opt) : {}
-    , updateData = null
-  ;
-
-  function chart (selection) {
-    // set the defaults
-    options.padding = options.padding || 0;
-    options.innerRadius = options.innerRadius || 0;
+  var chart = {
 
 
+    options: {
+        padding: 2,
+        innerRadius: 0
+    },
 
-      var width = options.width
-        , height = options.height
-        , radius = (Math.min(options.width, options.height) / 2) - (2 * options.padding)
-        , arc
-        , pie
-        , path
+    init: function (selection) {
+
+      if (arguments.length) {
+        this.draw(selection);
+      }
+      return this;
+    },
+
+    draw: function (selection) {
+
+      var width = this.options.width
+        , height = this.options.height
+        , radius = (Math.min(this.options.width, this.options.height) / 2) - (2 * this.options.padding)
         , svg
         , g
         , render
         , arcTween
       ;
 
-      arc = d3.svg.arc()
+      this.arc = d3.svg.arc()
               .outerRadius(radius)
-              .innerRadius(options.innerRadius);
+              .innerRadius(this.options.innerRadius);
 
-      pie = d3.layout.pie()
+      this.pie = d3.layout.pie()
               .sort(null)
               .value(function(d) { return d.values; });
 
-      svg = selection.append("svg")
+      this.svg = selection.append("svg")
                       .attr("width", width)
                       .attr("height", height)
                       .append("g")
                         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-      // g = svg.selectAll(".arc")
-      //         .data(pie(options.data))
-      //         .enter().append("g")
-      //           .attr("class", "arc");
+      this.render();
 
-      // g.append("path")
-      //   .attr("d", arc)
-      //   .style("fill", function (d) {
-      //     return d.data.color;
-      //   });
-      //   
-      //   
-      //   
-    arcTween = function (a) {
-              var i = d3.interpolate(this._current, a);
-              this._current = i(0);
-              return function(t) {
-                return arc(i(t));
-              };
-            }; // redraw the arcs
+      // add the updatemethods
+      // ref: https://www.toptal.com/d3-js/towards-reusable-d3-js-charts
+      // ref: https://bl.ocks.org/mbostock/1346410
+      this.updateData = function () {
+        this.render();
+      };
 
+    },
 
-    render = function () {
+    render: function () {
+      var path
+        , that = this
+        , arcTween = function (a) {
+            var i = d3.interpolate(this._current, a);
+            this._current = i(0);
+            return function(t) {
+              return that.arc(i(t));
+            };
+          }; // redraw the arcs
+
       //data join
-      path = svg
+      path = this.svg
                 .selectAll("path")
-                .data(pie(options.data), function (d) {
+                .data(this.pie(this.options.data), function (d) {
                   return d.data.label;
                 });
 
@@ -88,7 +92,7 @@ function pieChart (opt) {
                 .attr("fill", function(d) {
                   return d.data.color;
                 })
-                .attr("d", arc)
+                .attr("d", that.arc)
                 .transition()
                 .duration(1000)
                 .attrTween("d", arcTween)
@@ -103,92 +107,23 @@ function pieChart (opt) {
           .remove();
 
       // multiple options must be added
-      if (options.on) {
-        path.on(options.on.action, options.on.method);
+      if (this.options.on) {
+        path.on(this.options.on.action, this.options.on.method);
       }
-    };
-
-    render();
-
-
-      // add the updatemethods
-      // ref: https://www.toptal.com/d3-js/towards-reusable-d3-js-charts
-      // ref: https://bl.ocks.org/mbostock/1346410
-      updateData = function () {
-        render();
-      //   path = path.data(pie(options.data)); // compute the new angles
-      //   path.transition()
-      //       .duration(750)
-      //       .attrTween("d", arcTween);
-      };
-
+    },
+    /**
+     * Sets the innerradius (a innerradius > 0 creates a donut)
+     * @param  {Number} value - the innerRadius of the chart
+     * @return {Mixed}        - the value or chart
+     */
+    innerRadius: function (value) {
+      if (!arguments.length) return this.options.innerRadius;
+      this.options.innerRadius = value;
+      return chart;
     }
 
+  };
 
-    chart.innerRadius = function (value) {
-      if (!arguments.length) return options.innerRadius;
-      options.innerRadius = value;
-      return chart;
-    };
-
-    /**
-     * Sets the padding of all sides in the chart
-     * @param  {Number} value - the padding of the chart
-     * @return {Mixed}        - the value or chart
-     */
-    chart.padding = function (value) {
-      if (!arguments.length) return options.padding;
-      options.padding = value;
-      return chart;
-    };
-
-    /**
-     * Sets the width of a chart
-     * @param  {Number} value - the width of the chart
-     * @return {Mixed}        - the value or this
-     */
-    chart.width = function (value) {
-      if (!arguments.length) return options.width;
-      options.width = value;
-      return chart;
-    };
-    /**
-     * Sets the height of a chart
-     * @param  {Number} value - the height of the chart
-     * @return {Mixed}        - the value or chart
-     */
-    chart.height = function (value) {
-      if (!arguments.length) return options.height;
-      options.height = value;
-      return chart;
-    };
-    /**
-     * Sets the data on a chart
-     * @param  {Number} value - the data used to draw the chart
-     * @return {Mixed}        - the value or chart
-     */
-    chart.data = function  (value) {
-      if (!arguments.length) {
-        return options.data;
-      }
-      options.data = value;
-      if (typeof updateData === 'function') {
-        updateData();
-      }
-      return chart;
-    };
-
-    /**
-     * Sets a listener on the clices of the chart
-     * @param  {String} action    - the type of action to listen to ( ie. 'click', 'mouseover')
-     * @param  {Function} method  -  A bound method to be called when the action is invoked, passes the datum for this specific slice
-     * @return {Mixed}            - the value or chart
-     */
-    chart.on = function (action, method) {
-      if (!arguments.length) return options.on;
-      options.on = {action: action, method: method};
-      return chart;
-    };
-
-  return chart;
+  chart = _.extend(chart, base);
+  return (chart.init());
 }
