@@ -2,7 +2,9 @@
   "name": "d3by5-pie-chart",
   "version": "0.1.0",
   "description": "A d3 implementation of pie charts",
-  "main": "index.js",
+
+  "main": "src/pie-chart.js",
+
   "scripts": {
     "build": "bin/build.sh"
   },
@@ -28,16 +30,19 @@
   "bugs": {
     "url": "https://github.com/kartoteket/d3by5-pie-chart/issues"
   },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npm link ../d3by5-base-chart",
+    "preupdate": "npm link ../d3by5-base-chart"
+  },
   "homepage": "https://github.com/kartoteket/d3by5-pie-chart#readme",
   "dependencies": {
-    "underscore": "^1.8.3",
-
-    "//": "LOCAL DEPENDENCIES",
-    "d3by5-base-chart": "file:./d3by5-base-chart"
+    "d3": "^3.5.17",
+    "d3by5-base-chart": "latest",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
-    "d3": "^3.5.17",
     "uglify-js": "^2.6.2"
   }
 }

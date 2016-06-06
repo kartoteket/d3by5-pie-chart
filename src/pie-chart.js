@@ -1,7 +1,7 @@
 'use:strict';
 var _ = require('underscore')
   , d3 = require('d3')
-  , base = require('./d3by5-base-chart')
+  , base = require('d3by5-base-chart')
 ;
 
 module.exports = pieChart;
