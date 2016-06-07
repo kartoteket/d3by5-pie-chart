@@ -2,6 +2,7 @@
 var _ = require('underscore')
   , d3 = require('d3')
   , base = require('./d3by5-base-chart')
+  , transitions = require('./d3by5-transitions')
 ;
 
 module.exports = pieChart;
@@ -14,10 +15,12 @@ function pieChart (opt) {
 
   var chart = {
 
+    type: 'pie',
 
     options: {
         padding: 2,
-        innerRadius: 0
+        innerRadius: 0,
+        transitionDuration: 1000
     },
 
     init: function (selection) {
@@ -29,14 +32,9 @@ function pieChart (opt) {
     },
 
     draw: function (selection) {
-
       var width = this.options.width
         , height = this.options.height
         , radius = (Math.min(this.options.width, this.options.height) / 2) - (2 * this.options.padding)
-        , svg
-        , g
-        , render
-        , arcTween
       ;
 
       this.arc = d3.svg.arc()
@@ -58,13 +56,25 @@ function pieChart (opt) {
       // add the updatemethods
       // ref: https://www.toptal.com/d3-js/towards-reusable-d3-js-charts
       // ref: https://bl.ocks.org/mbostock/1346410
-      this.updateData = function () {
+      this.onDataUpdate = function () {
         this.render();
+      };
+
+      this.onEventUpdate = function () {
+        this.applyEvents();
       };
 
     },
 
+
     render: function () {
+      // If there are any transitions
+      // hijack the data update function
+      if (this.options.transition && this.options.transition.t) {
+        this.options.transition.t();
+      }
+
+
       var path
         , that = this
         , arcTween = function (a) {
@@ -106,10 +116,8 @@ function pieChart (opt) {
           .attrTween("d", arcTween)
           .remove();
 
-      // multiple options must be added
-      if (this.options.on) {
-        path.on(this.options.on.action, this.options.on.method);
-      }
+      // apply any events that was unbound
+      this.applyEvents();
     },
     /**
      * Sets the innerradius (a innerradius > 0 creates a donut)
@@ -120,10 +128,22 @@ function pieChart (opt) {
       if (!arguments.length) return this.options.innerRadius;
       this.options.innerRadius = value;
       return chart;
+    },
+
+    applyEvents: function () {
+      var that = this
+        , path = this.svg
+                .selectAll("path");
+      if (path) {
+        _.each(this.options.on, function (value, key) {
+          path.on(key, value);
+        });
+      }
     }
 
   };
 
   chart = _.extend(chart, base);
+  chart = _.extend(chart, transitions);
   return (chart.init());
 }
