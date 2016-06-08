@@ -32,13 +32,14 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "npm link ../d3by5-base-chart",
-    "preupdate": "npm link ../d3by5-base-chart"
+    "preinstall": "npm link ../d3by5-base-chart && npm link ../d3by5-transitions",
+    "preupdate": "npm link ../d3by5-base-chart && npm link ../d3by5-transitions"
   },
   "homepage": "https://github.com/kartoteket/d3by5-pie-chart#readme",
   "dependencies": {
     "d3": "^3.5.17",
     "d3by5-base-chart": "latest",
+    "d3by5-transitions": "latest",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
