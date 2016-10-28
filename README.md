@@ -5,6 +5,8 @@ The d3by5 is part of the d3by5 graph tools, this specific package will draw a pi
 This is an internal project, you are probably better off using somethin like [C3](https://github.com/c3js/c3). That said, just give it a try and contact us back (no capslock please).
 
 ## USAGE
+
+### NPM
 Build the project by running
 ```bash
 npm run build
@@ -12,6 +14,14 @@ npm run build
 
 When building two versions are built in the dist folder.
 use the [version] version if you want to keep a specific version, use submodules or symlinks (or download) of the one without version if you want to update the lib without updating your code.
+
+### Requirejs
+Just require the sourcefile, it expects the following files accessible at root so you may have to add a shim for it
+* d3by5-base-chart
+* d3by5-transitions
+* d3 - v3x
+* underscore
+
 
 #### dist/
 A browserified and uglified version with all dependencies included. Use this if you only want a simple graph to test.
