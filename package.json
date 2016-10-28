@@ -5,9 +5,6 @@
 
   "main": "src/pie-chart.js",
 
-  "scripts": {
-    "build": "bin/build.sh"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kartoteket/d3by5-pie-chart.git"
@@ -31,6 +28,7 @@
     "url": "https://github.com/kartoteket/d3by5-pie-chart/issues"
   },
   "scripts": {
+    "build": "bin/build.sh",
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npm link ../d3by5-base-chart && npm link ../d3by5-transitions",
     "preupdate": "npm link ../d3by5-base-chart && npm link ../d3by5-transitions"
