@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 This project adheres (well, maybe not quite) to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+
+### Changed
+- Changed the module loading to UMD
+
 ### Fixed
 - Fixed an issue with duplicate scipt props in packege.json preventing building
 

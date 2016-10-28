@@ -1,18 +1,30 @@
+/*!
+ * Base charts
+ *
+ */
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['underscore', 'd3', 'd3by5-base-chart', 'd3by5-transitions'] , factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory(require('underscore'), require('d3'), require('d3by5-base-chart'), require('d3by5-transitions'));
+    } else {
+        // Browser globals (root is window)
+        root.returnExports = factory(root._, root.d3, root.d3by5BaseChart, root.d3by5Transitions);
+    }
+}(this, function (_, d3, base, transitions) {
+
 'use:strict';
-var _ = require('underscore')
-  , d3 = require('d3')
 
-  , base = require('d3by5-base-chart')
-  , transitions = require('d3by5-transitions')
-;
-
-module.exports = pieChart;
 
 /**
  * The entrypoint
  * @return {[type]} [description]
  */
-function pieChart (opt) {
+function pieChart () {
 
   var chart = {
 
@@ -54,17 +66,6 @@ function pieChart (opt) {
 
       this.render();
 
-      // add the updatemethods
-      // ref: https://www.toptal.com/d3-js/towards-reusable-d3-js-charts
-      // ref: https://bl.ocks.org/mbostock/1346410
-      this.onDataUpdate = function () {
-        this.render();
-      };
-
-      this.onEventUpdate = function () {
-        this.applyEvents();
-      };
-
     },
 
 
@@ -101,7 +102,8 @@ function pieChart (opt) {
       // create new elements
       path.enter().append("path")
                 .attr("fill", function(d) {
-                  return d.data.color;
+                  console.log(d);
+                  return '#FF0000';
                 })
                 .attr("d", that.arc)
                 .transition()
@@ -148,3 +150,5 @@ function pieChart (opt) {
   chart = _.extend(chart, transitions);
   return (chart.init());
 }
+return pieChart();
+}));
