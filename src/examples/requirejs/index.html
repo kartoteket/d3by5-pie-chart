@@ -1,0 +1,54 @@
+<html>
+
+	<head>
+		<!-- link rel="stylesheet" href="../css/main.css" -->
+	</head>
+
+<body>
+
+<div class="js-pie-chart"></div>
+
+
+<div>
+	margin-top<input type="number" value="20" class="js-margin-top"><br/>
+	margin-right<input type="number" value="20" class="js-margin-right"><br/>
+	margin-bottom<input type="number" value="50" class="js-margin-bottom"><br/>
+	margin-left<input type="number" value="50" class="js-margin-left"><br/>
+	<input type="button" class="js-margin-button" value="Set margin">
+</div>
+<hr>
+<div>
+	x ticks: <input type="text" value="0" class="js-x-ticks"><br/>
+	<input type="button" class="js-x-ticks-button" value="Set ticks">
+</div>
+<hr>
+<div>
+	<select class="js-direction-select">
+	<option value"null">Choose dir</option>
+	<option value="top">top</option>
+	<option value="right">right</option>
+	<option value="bottom">bottom</option>
+	<option value="left">left</option>
+	</select>
+	<input type="button" class="js-direction-button" value="Set direction">
+</div>
+<hr>
+<div style="float: left;">
+	<div>
+		width: <input type="number" class="js-width" value="700"><br>
+		height <input type="number" class="js-height" value="500"><br>
+		<input type="button" class="js-dimension-button" value="Set dimensions">
+	</div>
+</div>
+
+<div style="float: left">
+	<div>
+		linear rotate: <input type="number" min="-180" max="180" class="js-linear-rotate" value="0"><br>
+		ordinal rotate: <input type="number" min="-180" max="180" class="js-ordinal-rotate" value="67"><br>
+		<input type="button" class="js-rotation-button" value="Set rotation">
+	</div>
+</div>
+<hr>
+
+<script data-main="app" src="lib/require.js"></script>
+</body></html>

@@ -4,6 +4,9 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 
 ## [unreleased]
 
+### Added
+- Added examples with requirejs implementation
+
 ### Changed
 - Changed the module loading to UMD
 
