@@ -1,16 +1,16 @@
 /*!
- * Base charts
+ * Pie charts
  *
  */
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['underscore', 'd3', 'd3by5-base-chart', 'd3by5-transitions'] , factory);
+        define(['underscore', 'd3', './base-chart', './transitions'] , factory);
     } else if (typeof module === 'object' && module.exports) {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
-        module.exports = factory(require('underscore'), require('d3'), require('d3by5-base-chart'), require('d3by5-transitions'));
+        module.exports = factory(require('underscore'), require('d3'), require('./base-chart'), require('./transitions'));
     } else {
         // Browser globals (root is window)
         root.returnExports = factory(root._, root.d3, root.d3by5BaseChart, root.d3by5Transitions);
@@ -39,15 +39,18 @@ function pieChart () {
     init: function (selection) {
 
       if (arguments.length) {
+        this.selection = selection;
         this.draw(selection);
       }
       return this;
     },
 
-    draw: function (selection) {
+    draw: function () {
       var width = this.options.width
         , height = this.options.height
-        , radius = (Math.min(this.options.width, this.options.height) / 2) - (2 * this.options.padding)
+        , adjustedHeight = (height - (this.options.margin.top + this.options.margin.bottom)) / 2
+        , adjustedWidth = (width - (this.options.margin.left + this.options.margin.right)) / 2
+        , radius = Math.min(adjustedHeight, adjustedWidth)
       ;
 
       this.arc = d3.svg.arc()
@@ -56,13 +59,20 @@ function pieChart () {
 
       this.pie = d3.layout.pie()
               .sort(null)
-              .value(function(d) { return d.values; });
+              .value(function(d) {
+                return d.values;
+              });
 
-      this.svg = selection.append("svg")
+      // remove old
+      if (this.svg) {
+        this.svg.remove();
+      }
+
+      this.svg = this.selection.append("svg")
                       .attr("width", width)
                       .attr("height", height)
                       .append("g")
-                        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                        .attr("transform", "translate(" + (this.options.margin.left + adjustedWidth) + "," + (this.options.margin.top + adjustedHeight) + ")");
 
       this.render();
 
@@ -79,6 +89,7 @@ function pieChart () {
 
       var path
         , that = this
+        , drawEvent
         , arcTween = function (a) {
             var i = d3.interpolate(this._current, a);
             this._current = i(0);
@@ -102,8 +113,7 @@ function pieChart () {
       // create new elements
       path.enter().append("path")
                 .attr("fill", function(d) {
-                  console.log(d);
-                  return '#FF0000';
+                  return that.options.fillColor(d.data.label);
                 })
                 .attr("d", that.arc)
                 .transition()
@@ -121,6 +131,14 @@ function pieChart () {
 
       // apply any events that was unbound
       this.applyEvents();
+
+      drawEvent = _.find(this.options.on, function (o) {
+        return o.action === 'draw';
+      });
+
+      if (drawEvent && _.isFunction (drawEvent.method)) {
+        drawEvent.method.call(this);
+      }
     },
     /**
      * Sets the innerradius (a innerradius > 0 creates a donut)
@@ -150,5 +168,5 @@ function pieChart () {
   chart = _.extend(chart, transitions);
   return (chart.init());
 }
-return pieChart();
+return pieChart;
 }));
