@@ -32,6 +32,7 @@ function pieChart () {
 
     options: {
         padding: 2,
+        size: 100,
         innerRadius: 0,
         transitionDuration: 1000
     },
@@ -50,12 +51,23 @@ function pieChart () {
         , height = this.options.height
         , adjustedHeight = (height - (this.options.margin.top + this.options.margin.bottom)) / 2
         , adjustedWidth = (width - (this.options.margin.left + this.options.margin.right)) / 2
-        , radius = Math.min(adjustedHeight, adjustedWidth)
+        , radius =  Math.min(adjustedHeight, adjustedWidth)
+        , innerRadius = this.options.innerRadius
+
       ;
+
+      if (this.options.size && this.options.size !== 100) {
+        radius = radius * (this.options.size / 100);
+        innerRadius = innerRadius * (this.options.size / 100);
+      }
+
+
+      this.radius = radius;
+      this.innerRadius = innerRadius;
 
       this.arc = d3.svg.arc()
               .outerRadius(radius)
-              .innerRadius(this.options.innerRadius);
+              .innerRadius(innerRadius); 
 
       this.pie = d3.layout.pie()
               .sort(null)
@@ -148,6 +160,17 @@ function pieChart () {
     innerRadius: function (value) {
       if (!arguments.length) return this.options.innerRadius;
       this.options.innerRadius = value;
+      return chart;
+    },
+
+    /**
+     * Sets the size, this is a percentage modifier, and should normally not exceede 100, but of cource it is possible
+     * @param  {Number} value - the percent to add to the calculated size
+     * @return {Mixed}        - the value or chart
+     */
+    size: function (value) {
+      if (!arguments.length) return this.options.size;
+      this.options.size = value;
       return chart;
     },
 
