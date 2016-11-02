@@ -141,6 +141,9 @@ function pieChart () {
           .attrTween("d", arcTween)
           .remove();
 
+      if (this.options.labelPosition !== 'none') {
+        this.drawLabels();
+      }
       if (this.options.valuesPosition !== 'none') {
         this.drawValues();
       }
@@ -156,6 +159,49 @@ function pieChart () {
         drawEvent.method.call(this);
       }
     },
+
+
+    drawLabels: function () {
+
+      var labelMultiplier
+        , that = this
+        , slices
+        , diff = this.radius - this.innerRadius
+      ;
+
+      labelMultiplier = 1.2 + ((diff/this.radius));
+
+
+
+      slices = this.arcs
+                  .append('text')
+                  .attr("text-anchor", function (d) {
+                    if (d.endAngle < 3) {
+                      return 'start';
+                    }
+                    if ((d.startAngle > 3.3 && d.endAngle < 6) || (d.endAngle - d.startAngle > 0.5)) {
+                      return 'end';
+                    }
+                    return 'middle';
+                  })
+                  .attr('transform', function (d, i) {
+                    var c = that.arc.centroid(d, i);
+                    return 'translate(' + (c[0] * labelMultiplier) + ',' + (c[1] * labelMultiplier) +')';
+                    // var _obj = {endAngle: d.endAngle,
+                    //             innerRadius: that.radius + 50,
+                    //             outerRadius: that.radius + 245,
+                    //             padAngle: d.padAngle,
+                    //             startAngle: d.startAngle};
+                    // return "translate(" + that.arc.centroid(_obj, i) + ")";
+                  })
+                  .text(function (d) {
+                    if (_.isFunction (that.options.labelFormat)) {
+                      return that.options.labelFormat(d.data.label);
+                    }
+                    return d.data.label;
+                  });
+    },
+
     drawValues: function () {
       var that = this;
 
