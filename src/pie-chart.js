@@ -186,9 +186,9 @@ function pieChart () {
     }
 
   };
+  chart.options = _.extend(chart.options, base.options);
+  chart = _.extend(chart, _.omit(base, 'options'), transitions);
 
-  chart = _.extend(chart, base);
-  chart = _.extend(chart, transitions);
   return (chart.init());
 }
 return pieChart;
