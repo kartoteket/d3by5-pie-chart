@@ -141,6 +141,10 @@ function pieChart () {
           .attrTween("d", arcTween)
           .remove();
 
+      if (this.options.valuesPosition !== 'none') {
+        this.drawValues();
+      }
+
       // apply any events that was unbound
       this.applyEvents();
 
@@ -152,6 +156,36 @@ function pieChart () {
         drawEvent.method.call(this);
       }
     },
+    drawValues: function () {
+      var that = this;
+
+      this.arcs.filter(function(d) { 
+                        return d.endAngle - d.startAngle > 0.2; })
+              .append('text')
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'middle')
+            .attr('transform', function(d, i) { //set the label's origin to the center of the arc
+              var _obj = {endAngle: d.endAngle,
+                          innerRadius: that.radius/2,
+                          outerRadius: that.radius,
+                          padAngle: d.padAngle,
+                          startAngle: d.startAngle};
+
+              return 'translate(' + that.arc.centroid(_obj, i) + ')rotate(' + that.angle(_obj) + ')';
+            })
+            .style('fill', 'White')
+            .style('font', 'bold 12px Arial')
+      .text(function(d) {
+        return d.data.values;
+      });
+    },
+
+        // Computes the angle of an arc, converting from radians to degrees.
+    angle: function(d) {
+      var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+      return a > 90 ? a - 180 : a;
+    },
+
     /**
      * Sets the innerradius (a innerradius > 0 creates a donut)
      * @param  {Number} value - the innerRadius of the chart
