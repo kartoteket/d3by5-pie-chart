@@ -111,19 +111,22 @@ function pieChart () {
           }; // redraw the arcs
 
       //data join
-      path = this.svg
-                .selectAll("path")
-                .data(this.pie(this.options.data), function (d) {
-                  return d.data.label;
-                });
+      this.arcs = this.svg
+                        .selectAll("path")
+                        .data(this.pie(this.options.data), function (d) {
+                          return d.data.label;
+                        });
 
       // update, transition
-      path.transition()
+      this.arcs.transition()
           .duration(1000)
           .attrTween("d", arcTween);
 
       // create new elements
-      path.enter().append("path")
+      this.arcs.enter()
+                .append('g')
+                .attr('class', 'js-pie__path')
+                .append("path")
                 .attr("fill", function(d) {
                   return that.options.fillColor(d.data.label);
                 })
@@ -136,7 +139,7 @@ function pieChart () {
                 }); // store the initial angles
 
       // remove unused data
-      path.exit()
+      this.arcs.exit()
           .transition()
           .attrTween("d", arcTween)
           .remove();
