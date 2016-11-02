@@ -232,7 +232,7 @@ function pieChart () {
             .style('fill', '#fff')  // override default text color
             .style('font-weight', 'bold')  // override default text weight
       .text(function(d) {
-        return d.data.values;
+        return that.formatNumber(d.data.values, that.options.valuesFormat);
       });
     },
 
