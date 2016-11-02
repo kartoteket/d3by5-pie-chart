@@ -32,7 +32,6 @@ function pieChart () {
 
     options: {
         padding: 2,
-        size: 100,
         innerRadius: 0,
         transitionDuration: 1000
     },
@@ -51,23 +50,12 @@ function pieChart () {
         , height = this.options.height
         , adjustedHeight = (height - (this.options.margin.top + this.options.margin.bottom)) / 2
         , adjustedWidth = (width - (this.options.margin.left + this.options.margin.right)) / 2
-        , radius =  Math.min(adjustedHeight, adjustedWidth)
-        , innerRadius = this.options.innerRadius
-
+        , radius = Math.min(adjustedHeight, adjustedWidth)
       ;
-
-      if (this.options.size && this.options.size !== 100) {
-        radius = radius * (this.options.size / 100);
-        innerRadius = innerRadius * (this.options.size / 100);
-      }
-
-
-      this.radius = radius;
-      this.innerRadius = innerRadius;
 
       this.arc = d3.svg.arc()
               .outerRadius(radius)
-              .innerRadius(innerRadius); 
+              .innerRadius(this.options.innerRadius);
 
       this.pie = d3.layout.pie()
               .sort(null)
@@ -111,22 +99,19 @@ function pieChart () {
           }; // redraw the arcs
 
       //data join
-      this.arcs = this.svg
-                        .selectAll("path")
-                        .data(this.pie(this.options.data), function (d) {
-                          return d.data.label;
-                        });
+      path = this.svg
+                .selectAll("path")
+                .data(this.pie(this.options.data), function (d) {
+                  return d.data.label;
+                });
 
       // update, transition
-      this.arcs.transition()
+      path.transition()
           .duration(1000)
           .attrTween("d", arcTween);
 
       // create new elements
-      this.arcs.enter()
-                .append('g')
-                .attr('class', 'js-pie__path')
-                .append("path")
+      path.enter().append("path")
                 .attr("fill", function(d) {
                   return that.options.fillColor(d.data.label);
                 })
@@ -139,17 +124,10 @@ function pieChart () {
                 }); // store the initial angles
 
       // remove unused data
-      this.arcs.exit()
+      path.exit()
           .transition()
           .attrTween("d", arcTween)
           .remove();
-
-      if (this.options.labelPosition !== 'none') {
-        this.drawLabels();
-      }
-      if (this.options.valuesPosition !== 'none') {
-        this.drawValues();
-      }
 
       // apply any events that was unbound
       this.applyEvents();
@@ -162,79 +140,6 @@ function pieChart () {
         drawEvent.method.call(this);
       }
     },
-
-
-    drawLabels: function () {
-
-      var labelMultiplier
-        , that = this
-        , slices
-        , diff = this.radius - this.innerRadius
-      ;
-
-      labelMultiplier = 1.2 + ((diff/this.radius));
-
-
-
-      slices = this.arcs
-                  .append('text')
-                  .attr("text-anchor", function (d) {
-                    if (d.endAngle < 3) {
-                      return 'start';
-                    }
-                    if ((d.startAngle > 3.3 && d.endAngle < 6) || (d.endAngle - d.startAngle > 0.5)) {
-                      return 'end';
-                    }
-                    return 'middle';
-                  })
-                  .attr('transform', function (d, i) {
-                    var c = that.arc.centroid(d, i);
-                    return 'translate(' + (c[0] * labelMultiplier) + ',' + (c[1] * labelMultiplier) +')';
-                    // var _obj = {endAngle: d.endAngle,
-                    //             innerRadius: that.radius + 50,
-                    //             outerRadius: that.radius + 245,
-                    //             padAngle: d.padAngle,
-                    //             startAngle: d.startAngle};
-                    // return "translate(" + that.arc.centroid(_obj, i) + ")";
-                  })
-                  .text(function (d) {
-                    if (_.isFunction (that.options.labelFormat)) {
-                      return that.options.labelFormat(d.data.label);
-                    }
-                    return d.data.label;
-                  });
-    },
-
-    drawValues: function () {
-      var that = this;
-
-      this.arcs.filter(function(d) { 
-                        return d.endAngle - d.startAngle > 0.2; })
-              .append('text')
-            .attr('dy', '.35em')
-            .attr('text-anchor', 'middle')
-            .attr('transform', function(d, i) { //set the label's origin to the center of the arc
-              var _obj = {endAngle: d.endAngle,
-                          innerRadius: that.radius/2,
-                          outerRadius: that.radius,
-                          padAngle: d.padAngle,
-                          startAngle: d.startAngle};
-
-              return 'translate(' + that.arc.centroid(_obj, i) + ')rotate(' + that.angle(_obj) + ')';
-            })
-            .style('fill', 'White')
-            .style('font', 'bold 12px Arial')
-      .text(function(d) {
-        return d.data.values;
-      });
-    },
-
-        // Computes the angle of an arc, converting from radians to degrees.
-    angle: function(d) {
-      var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
-      return a > 90 ? a - 180 : a;
-    },
-
     /**
      * Sets the innerradius (a innerradius > 0 creates a donut)
      * @param  {Number} value - the innerRadius of the chart
@@ -243,17 +148,6 @@ function pieChart () {
     innerRadius: function (value) {
       if (!arguments.length) return this.options.innerRadius;
       this.options.innerRadius = value;
-      return chart;
-    },
-
-    /**
-     * Sets the size, this is a percentage modifier, and should normally not exceede 100, but of cource it is possible
-     * @param  {Number} value - the percent to add to the calculated size
-     * @return {Mixed}        - the value or chart
-     */
-    size: function (value) {
-      if (!arguments.length) return this.options.size;
-      this.options.size = value;
       return chart;
     },
 
@@ -269,9 +163,9 @@ function pieChart () {
     }
 
   };
-  chart.options = _.extend(chart.options, base.options);
-  chart = _.extend(chart, _.omit(base, 'options'), transitions);
 
+  chart = _.extend(chart, base);
+  chart = _.extend(chart, transitions);
   return (chart.init());
 }
 return pieChart;
