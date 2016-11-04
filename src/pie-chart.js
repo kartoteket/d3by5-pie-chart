@@ -34,7 +34,12 @@ function pieChart () {
         padding: 2,
         size: 100,
         innerRadius: 0,
-        transitionDuration: 1000
+        transitionDuration: 1000,
+        textStyle : {  // probably tmp until implemented themeing
+          'font-family' : '"Helvetica Neue", Arial, Helvetica, sans-serif',
+          'font-size'   : 13,
+          'fill'        : '#444'
+        }
     },
 
     init: function (selection) {
@@ -178,6 +183,7 @@ function pieChart () {
 
       slices = this.arcs
                   .append('text')
+                  .style(this.options.textStyle)
                   .attr("text-anchor", function (d) {
                     // if slightly smaller than a half circle
                     if (d.startAngle < 3) {
@@ -209,7 +215,7 @@ function pieChart () {
     drawValues: function () {
       var that = this;
 
-      this.arcs.filter(function(d) { 
+      this.arcs.filter(function(d) {
                         return d.endAngle - d.startAngle > 0.2; })
               .append('text')
             .attr('dy', '.35em')
@@ -223,10 +229,11 @@ function pieChart () {
 
               return 'translate(' + that.arc.centroid(_obj, i) + ')rotate(' + that.angle(_obj) + ')';
             })
-            .style('fill', 'White')
-            .style('font', 'bold 12px Arial')
+            .style(this.options.textStyle)
+            .style('fill', '#fff')  // override default text color
+            .style('font-weight', 'bold')  // override default text weight
       .text(function(d) {
-        return d.data.values;
+        return that.formatNumber(d.data.values, that.options.valuesFormat);
       });
     },
 
