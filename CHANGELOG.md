@@ -12,6 +12,7 @@ This project adheres (well, maybe not quite) to [Semantic Versioning](http://sem
 
 ### Fixed
 - Fixed an issue with duplicate scipt props in packege.json preventing building
+- Fixed an issue where few slices offsets labels in the worng direction
 
 
 ## [0.1.0] - 2016-05-30

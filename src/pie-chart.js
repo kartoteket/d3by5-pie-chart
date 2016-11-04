@@ -179,7 +179,8 @@ function pieChart () {
       slices = this.arcs
                   .append('text')
                   .attr("text-anchor", function (d) {
-                    if (d.endAngle < 3) {
+                    // if slightly smaller than a half circle
+                    if (d.startAngle < 3) {
                       return 'start';
                     }
                     if ((d.startAngle > 3.3 && d.endAngle < 6) || (d.endAngle - d.startAngle > 0.5)) {
