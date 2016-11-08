@@ -205,9 +205,9 @@ function pieChart () {
                     // return "translate(" + that.arc.centroid(_obj, i) + ")";
                   })
                   .text(function (d) {
-                    if (_.isFunction (that.options.labelFormat)) {
-                      return that.options.labelFormat(d.data.label);
-                    }
+                    // if (_.isFunction (that.options.labelFormat)) {
+                    //   return that.options.labelFormat(d.data.label);
+                    // }
                     return d.data.label;
                   });
     },
