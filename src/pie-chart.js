@@ -197,17 +197,8 @@ function pieChart () {
                   .attr('transform', function (d, i) {
                     var c = that.arc.centroid(d, i);
                     return 'translate(' + (c[0] * labelMultiplier) + ',' + (c[1] * labelMultiplier) +')';
-                    // var _obj = {endAngle: d.endAngle,
-                    //             innerRadius: that.radius + 50,
-                    //             outerRadius: that.radius + 245,
-                    //             padAngle: d.padAngle,
-                    //             startAngle: d.startAngle};
-                    // return "translate(" + that.arc.centroid(_obj, i) + ")";
                   })
                   .text(function (d) {
-                    // if (_.isFunction (that.options.labelFormat)) {
-                    //   return that.options.labelFormat(d.data.label);
-                    // }
                     return d.data.label;
                   });
     },
@@ -216,8 +207,8 @@ function pieChart () {
       var that = this;
 
       this.arcs.filter(function(d) {
-                        return d.endAngle - d.startAngle > 0.2; })
-              .append('text')
+              return d.endAngle - d.startAngle > 0.2; })
+            .append('text')
             .attr('dy', '.35em')
             .attr('text-anchor', 'middle')
             .attr('transform', function(d, i) { //set the label's origin to the center of the arc
