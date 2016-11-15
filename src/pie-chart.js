@@ -184,6 +184,7 @@ function pieChart () {
       slices = this.arcs
                   .append('text')
                   .style(this.options.textStyle)
+                  .style('fill', this.options.theme.textColor)
                   .attr("text-anchor", function (d) {
                     // if slightly smaller than a half circle
                     if (d.startAngle < 3) {
@@ -246,7 +247,18 @@ function pieChart () {
     },
 
     /**
-     * Sets the size, this is a percentage modifier, and should normally not exceede 100, but of cource it is possible
+     * Sets the text style 
+     * @param  {[type]} value [description]
+     * @return {[type]}       [description]
+     */
+    textStyle: function (value) {
+      if (!arguments.length) return this.options.textStyle;
+      this.options.textStyle = value;
+      return chart;
+    },
+
+    /**
+     * Sets the size, this is a percentage modifier, and should normally not exceed 100, but of cource it is possible
      * @param  {Number} value - the percent to add to the calculated size
      * @return {Mixed}        - the value or chart
      */
