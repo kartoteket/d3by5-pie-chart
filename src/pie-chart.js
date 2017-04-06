@@ -170,38 +170,42 @@ function pieChart () {
 
 
     drawLabels: function () {
-
-      var labelMultiplier
-        , that = this
-        , slices
+      var that = this
         , diff = this.radius - this.innerRadius
+        , labelOffsetMulitplier = 1.25 + ( diff / this.radius ) // padding between pie and label
+        , labelTextwidth = 120
       ;
 
-      labelMultiplier = 1.2 + ((diff/this.radius));
+      this.arcs.append('text')
+        .style(this.options.textStyle)
+        .style('fill', this.options.theme.textColor)
+        .attr("text-anchor", this.labelTextAnchor)
+        .attr('transform', function (d, i) {
+          var c        = that.arc.centroid(d, i)
+            , pos      = that.labelTextAnchor(d)
+            , midAngle = that.midAngle(d)
+            , length   = d.data.label.trim().length
+            , yOffset  = 0;
 
+          // in some circunmstances we applie more padding nad/or pull long text upwards to compensate for multiple lines
+          if(pos === 'middle' || length > 20) {
+            labelOffsetMulitplier = labelOffsetMulitplier + 0.2;
+          }
+          if (pos !== 'middle' && length > 30 && ((midAngle < 1.25 && midAngle > 1.75) || (midAngle > 4.25 && midAngle < 4.75))) {
+            yOffset = length / 2
+          }
 
+          return 'translate(' + (c[0] * labelOffsetMulitplier) + ',' + ((c[1] * labelOffsetMulitplier) - yOffset) +')';
+        })
+        .text(function (d) {
+          // text under the pie can be twice as wide as on the sides
+          if(that.labelTextAnchor(d) === 'middle') {
+            labelTextwidth = labelTextwidth * 2;
+          }
 
-      slices = this.arcs
-                  .append('text')
-                  .style(this.options.textStyle)
-                  .style('fill', this.options.theme.textColor)
-                  .attr("text-anchor", function (d) {
-                    // if slightly smaller than a half circle
-                    if (d.startAngle < 3) {
-                      return 'start';
-                    }
-                    if ((d.startAngle > 3.3 && d.endAngle < 6) || (d.endAngle - d.startAngle > 0.5)) {
-                      return 'end';
-                    }
-                    return 'middle';
-                  })
-                  .attr('transform', function (d, i) {
-                    var c = that.arc.centroid(d, i);
-                    return 'translate(' + (c[0] * labelMultiplier) + ',' + (c[1] * labelMultiplier) +')';
-                  })
-                  .text(function (d) {
-                    return d.data.label;
-                  });
+          return d.data.label.trim();
+
+        }).each(base.wrapText(labelTextwidth, 5));
     },
 
     drawValues: function () {
@@ -229,8 +233,28 @@ function pieChart () {
       });
     },
 
-        // Computes the angle of an arc, converting from radians to degrees.
-    angle: function(d) {
+    /**
+     * Figures out where to anchor text labels
+     * @param  {object} d  pie segment slice data
+     * @return {string}    text-anchor value. 'middle', 'start' or 'end'
+     */
+    labelTextAnchor: function (d) {
+      var midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+      // console.log(d.data.label, startAngle, endAngle, midAngle, (midAngle < 2.5 ? 'start' : (midAngle > 3.5 ? 'end' : 'middle')));
+      return midAngle < 2.5 ? 'start' : (midAngle > 3.5 ? 'end' : 'middle');
+    },
+
+    /**
+     * Returns the radian of the center angle of an arc (pie slice)
+     * @param  {object} d pie segment slice data
+     * @return {float}    middle Angle radian of arc
+     */
+    midAngle: function(d) {
+      return d.startAngle + (d.endAngle - d.startAngle) / 2;
+    },
+
+    // Computes the angle of an arc, converting from radians to degrees.
+    angle: function (d) {
       var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
       return a > 90 ? a - 180 : a;
     },
