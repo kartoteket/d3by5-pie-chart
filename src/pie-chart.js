@@ -188,12 +188,18 @@ function pieChart () {
             , yOffset  = 0;
 
           // in some circunmstances we applie more padding nad/or pull long text upwards to compensate for multiple lines
-          if(pos === 'middle' || length > 20) {
+          if(pos === 'middle') {
             labelOffsetMulitplier = labelOffsetMulitplier + 0.2;
+          } else if (length > 30) {
+            // 3 and 9 o'clock
+            if ((midAngle > 1.25 && midAngle < 1.75) || (midAngle > 4.25 && midAngle < 4.75)) {
+              yOffset = length / 2
+            } else {
+              labelOffsetMulitplier = labelOffsetMulitplier + 0.3;
+            }
           }
-          if (pos !== 'middle' && length > 30 && ((midAngle < 1.25 && midAngle > 1.75) || (midAngle > 4.25 && midAngle < 4.75))) {
-            yOffset = length / 2
-          }
+
+          // console.log(d.data.label.trim(), midAngle, labelOffsetMulitplier, yOffset);
 
           return 'translate(' + (c[0] * labelOffsetMulitplier) + ',' + ((c[1] * labelOffsetMulitplier) - yOffset) +')';
         })
